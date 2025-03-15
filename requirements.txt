@@ -1,0 +1,62 @@
+# ------------------------------------------------------------
+# Basic Data Science and Visualization Libraries
+# ------------------------------------------------------------
+numpy
+scipy
+pandas
+matplotlib
+seaborn
+scikit-learn
+# ------------------------------------------------------------
+# PyTorch and Audio Modules
+# ------------------------------------------------------------
+# For CPU-only installation on Linux/macOS:
+#   pip install torch==2.0.0 torchvision==0.15.1 torchaudio==2.0.0
+# If you have a GPU, install the correct CUDA wheel from https://pytorch.org/
+# then proceed with the rest of these packages.
+torch
+torchvision
+torchaudio
+
+# ------------------------------------------------------------
+# Speech & Audio Processing
+# ------------------------------------------------------------
+librosa         # Audio feature extraction
+speechbrain    # Toolkit for ASR & speech processing
+jiwer           # Calculate WER (Word Error Rate)
+
+# ------------------------------------------------------------
+# Transformers, Datasets, and NLP Tools
+# ------------------------------------------------------------
+transformers
+datasets
+nltk
+spacy
+sentencepiece
+
+# ------------------------------------------------------------
+# FastText (optional, can be tricky on Windows)
+# ------------------------------------------------------------
+fasttext
+
+# ------------------------------------------------------------
+# Recommendation & Similarity
+# ------------------------------------------------------------
+faiss-cpu    # Vector similarity (CPU version)
+lightfm    # Hybrid recommendation library
+spotipy    # Spotify Web API wrapper (optional if you use Spotify)
+
+# ------------------------------------------------------------
+# Web Framework and Deployment
+# ------------------------------------------------------------
+fastapi
+uvicorn
+gunicorn
+docker       # For Docker-related automation (optional)
+
+# ------------------------------------------------------------
+# Utilities
+# ------------------------------------------------------------
+tqdm
+requests
+PyYAML
