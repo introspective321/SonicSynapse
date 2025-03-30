@@ -36,24 +36,17 @@ python voice_to_text.py
 
 ---
 
-### 3. Preprocess the Text
-Clean the transcribed text by running the preprocessing script:
+### 3. Extract your tags
+Extract tags from the transcription by running the script:
 
 ```bash
 python preprocessing.py
 ```
 
-- The cleaned text will be saved in a file named `cleaned_transcriptions.txt`.
+- The extracted tags will be saved in a file named `extracted_tags.txt`.
 
 ---
 
-### 4. Extract Keywords
-Extract important keywords from the cleaned text using the following command:
+## Colab Notebook for Generating Embeddings
 
-```bash
-python keyword_extraction.py
-```
-
-- The extracted keywords will be saved in a file named `keywords.txt`.
-
----
+Find the colab notebook here : [Colab Notebook : b22ai002@iitj.ac.in](https://colab.research.google.com/drive/1X6qDHoGEqQzxzz1wXFxEZaNliE5qCMyt?usp=sharing)
