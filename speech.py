@@ -6,4 +6,4 @@ audio = "audio.mp3"
 result = model.transcribe(audio)
 
 
-print(result)
+print(result["text"])
