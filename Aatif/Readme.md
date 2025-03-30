@@ -50,3 +50,7 @@ python preprocessing.py
 ## Colab Notebook for Generating Embeddings
 
 Find the colab notebook here : [Colab Notebook : b22ai002@iitj.ac.in](https://colab.research.google.com/drive/1X6qDHoGEqQzxzz1wXFxEZaNliE5qCMyt?usp=sharing)
+
+### 4. Get the top recommendation
+
+- Set the user_input in the notebook as the extracted tags. Run the cells and get the preview link for the top recommendation.
