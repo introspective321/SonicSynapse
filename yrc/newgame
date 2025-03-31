@@ -1,0 +1,148 @@
+import spacy
+from huggingface_hub import InferenceClient
+import numpy as np
+
+# Load spaCy model for NLP (ensure 'en_core_web_sm' is installed)
+nlp = spacy.load("en_core_web_sm")
+
+# Initialize the Hugging Face Inference Client
+client = InferenceClient(
+    api_key="hf_xxxxxxxxxxxxxxxxxxxxxxxx",  # Replace with your actual API key
+)
+
+def extract_tags(transcription):
+    """
+    Extract potential tags from the transcription, including nouns, adjectives, and adjective-noun bigrams.
+    
+    Args:
+        transcription (str): The transcribed text.
+    Returns:
+        list: List of potential tags (unigrams and bigrams).
+    """
+    doc = nlp(transcription.lower())
+    
+    # Extract unigrams: nouns and adjectives
+    unigrams = [token.text for token in doc if token.pos_ in ["NOUN", "ADJ"]]
+    
+    # Extract bigrams: adjective followed by noun
+    bigrams = []
+    for i in range(len(doc) - 1):
+        if doc[i].pos_ == "ADJ" and doc[i + 1].pos_ == "NOUN":
+            bigrams.append(f"{doc[i].text} {doc[i + 1].text}")
+    
+    # Combine unigrams and bigrams as potential tags
+    potential_tags = unigrams + bigrams
+    return potential_tags
+
+def map_tags(potential_tags, predefined_tags, threshold, popular_tags):
+    """
+    Map potential tags to predefined tags using Hugging Face Inference API for semantic similarity.
+    
+    Args:
+        potential_tags (list): List of extracted tags from transcription.
+        predefined_tags (list): List of predefined tags.
+        threshold (float): Minimum similarity score for a match.
+        popular_tags (list): Fallback tags if no matches are found.
+    Returns:
+        list: List of mapped tags, or popular tags if no matches.
+    """
+    mapped_tags = []
+    
+    for tag in potential_tags:
+        # Use InferenceClient to compute similarities between the potential tag and predefined tags
+        result = client.sentence_similarity(
+            inputs={
+                "source_sentence": tag,
+                "sentences": [tag.replace("_", " ") for tag in predefined_tags]
+            },
+            model="sentence-transformers/all-MiniLM-L6-v2",
+        )
+        
+        # Extract similarity scores
+        similarities = np.array(result)  # Result is a list of similarity scores
+        max_similarity = np.max(similarities)
+        
+        if max_similarity > threshold:
+            # Map to the most similar predefined tag
+            most_similar_index = np.argmax(similarities)
+            mapped_tags.append(predefined_tags[most_similar_index])
+    
+    # If no tags are mapped, return popular tags
+    if not mapped_tags:
+        return popular_tags
+    # Return unique mapped tags
+    return list(set(mapped_tags))
+
+def extract_tags_from_transcription(input_file="transcription.txt", output_file="extracted_tags.txt", all_tags=None, popular_tags=None, threshold=0.5):
+    """
+    Extracts relevant tags from a transcription file using Hugging Face Inference API and saves them to a file.
+    
+    Args:
+        input_file (str): Path to the transcription file.
+        output_file (str): Path to save the extracted tags.
+        all_tags (set): Set of predefined tags (e.g., 'rock', 'classic_rock').
+        popular_tags (list): List of fallback popular tags (e.g., ['pop', 'rock']).
+        threshold (float): Minimum similarity score for a tag match (default: 0.5).
+    Returns:
+        list: Sorted list of extracted tags.
+    """
+    if all_tags is None:
+        raise ValueError("Tag list (all_tags) cannot be None!")
+    if popular_tags is None:
+        popular_tags = ["pop", "rock"]  # Default fallback tags
+    
+    # Convert predefined tags to list
+    predefined_tags = list(all_tags)
+    
+    # Read transcription from file
+    with open(input_file, "r") as file:
+        transcription = file.read().lower()
+    
+    # Extract potential tags from transcription
+    potential_tags = extract_tags(transcription)
+    
+    # Map potential tags to predefined tags using semantic similarity via Inference API
+    mapped_tags = map_tags(potential_tags, predefined_tags, threshold, popular_tags)
+    
+    # Save mapped tags to output file
+    with open(output_file, "w") as file:
+        file.write(" ".join(sorted(mapped_tags)))
+    
+    print("Extracted Tags:", sorted(mapped_tags))
+    print(f"Tags saved to {output_file}")
+    
+    return sorted(mapped_tags)
+
+# Example usage
+if __name__ == "__main__":
+    # Example predefined tags (replace with your actual list of 100 tags)
+    all_tags = {
+        '00s', '60s', '70s', '80s', '90s', 'acoustic', 'alternative', 'alternative_rock',
+        'ambient', 'american', 'avant_garde', 'beautiful', 'black_metal', 'blues',
+        'blues_rock', 'british', 'britpop', 'chill', 'chillout', 'classic_rock',
+        'classical', 'country', 'cover', 'dance', 'dark_ambient', 'death_metal',
+        'doom_metal', 'downtempo', 'drum_and_bass', 'electro', 'electronic', 'emo',
+        'experimental', 'female_vocalists', 'folk', 'french', 'funk', 'german', 'gothic',
+        'gothic_metal', 'grindcore', 'grunge', 'guitar', 'hard_rock', 'hardcore',
+        'heavy_metal', 'hip_hop', 'house', 'idm', 'indie', 'indie_pop', 'indie_rock',
+        'industrial', 'instrumental', 'j_pop', 'japanese', 'jazz', 'lounge', 'love',
+        'male_vocalists', 'mellow', 'melodic_death_metal', 'metal', 'metalcore',
+        'new_age', 'new_wave', 'noise', 'nu_metal', 'oldies', 'piano', 'polish', 'pop',
+        'pop_rock', 'post_hardcore', 'post_punk', 'post_rock', 'power_metal',
+        'progressive_metal', 'progressive_rock', 'psychedelic', 'psychedelic_rock',
+        'punk', 'punk_rock', 'rap', 'reggae', 'rnb', 'rock', 'russian', 'screamo',
+        'singer_songwriter', 'ska', 'soul', 'soundtrack', 'swedish', 'symphonic_metal',
+        'synthpop', 'techno', 'thrash_metal', 'trance', 'trip_hop'
+    }
+    
+    # Example popular tags for fallback
+    popular_tags = ["pop", "rock"]
+    
+    # Call the function with example parameters
+    extracted_tags = extract_tags_from_transcription(
+        input_file="transcription.txt",
+        output_file="extracted_tags.txt",
+        all_tags=all_tags,
+        popular_tags=popular_tags,
+        threshold=0.5
+    )
