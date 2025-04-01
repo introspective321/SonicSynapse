@@ -74,22 +74,27 @@ SonicSynapse/
 ├── requirements.txt  
 ├── data/  
 │   ├── raw/                 # Original CSVs or unprocessed data  
-│   ├── processed/           # Processed CSVs (tag-encoded, numeric)  
-│   ├── triplets.pkl         # (query, pos, neg) used for training  
-│   └── audio_samples/       # Optional audio files for demos  
+│   ├── processed/           # Processed CSVs (tag-encoded, numeric) along with (query, pos, neg) used for training.
+│   └── user/                # User input files (audio, transcription)
+├── notebooks/
+    ├── preprocess.py        # Initial preprocessing of raw data
+    └── two_tower.py         # Final model training 
 ├── scripts/  
-│   ├── step1_convert_tags.py  
-│   ├── step2_build_triplets.py  
-│   ├── step3_train_song_tower.py  
+│   ├── record_audio.py  
+│   ├── voice_to_text.py  
+│   ├── in_song_tower.py  
 │   └── step4_inference.py  
 ├── models/  
-│   ├── query_encoder_finetuned.pth  
-│   └── song_encoder.pth  
+│   ├── v0/
+│       ├── query_encoder_finetuned.pth  
+|       ├── song_encoder.pth 
+│   ├── v1/
+│       ├── query_encoder_finetuned.pth  
+|       └──  song_encoder.pth 
 ├── modules/  
-│   ├── query_encoder.py     # DistilBERT-based code  
-│   ├── song_encoder.py      # MLP-based code  
-│   └── asr_whisper.py       # Whisper-based speech-to-text  
-└── main.py                  # (Optional) central script to run the pipeline  
+   ├── query_encoder.py     # DistilBERT-based code  
+   └── song_encoder.py      # MLP-based code  
+   
 
 ---
 
