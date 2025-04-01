@@ -69,33 +69,37 @@ Additional numeric columns (tempo, loudness, etc.) may also be used for feature 
 
 ## 5. Repository Structure
 
+```
 SonicSynapse/
-├── README.md  
-├── requirements.txt  
-├── data/  
-│   ├── raw/                 # Original CSVs or unprocessed data  
-│   ├── processed/           # Processed CSVs (tag-encoded, numeric) along with (query, pos, neg) used for training.
+├── README.md
+├── requirements.txt
+├── data/
+│   ├── raw/                 # Original CSVs or unprocessed data
+│   ├── processed/           # Processed CSVs (tag-encoded, numeric) along with (query, pos, neg) used for training
 │   └── user/                # User input files (audio, transcription)
 ├── notebooks/
-    ├── preprocess.py        # Initial preprocessing of raw data
-    └── two_tower.py         # Final model training 
-├── scripts/  
-│   ├── record_audio.py  
-│   ├── voice_to_text.py  
-│   ├── in_song_tower.py  
-│   └── step4_inference.py  
-├── models/  
+│   ├── preprocess.py        # Initial preprocessing of raw data
+│   └── two_tower.py         # Final model training
+├── scripts/
+│   ├── record_audio.py
+│   ├── voice_to_text.py
+│   ├── inference.py
+│   ├── build_triplets.py
+│   ├── load_triplets.py
+│   ├── tags_to_numerice.py
+│   ├── train_song_tower.py
+│   └── final_workflow.py
+├── models/
 │   ├── v0/
-│       ├── query_encoder_finetuned.pth  
-|       ├── song_encoder.pth 
-│   ├── v1/
-│       ├── query_encoder_finetuned.pth  
-|       └──  song_encoder.pth 
-├── modules/  
-   ├── query_encoder.py     # DistilBERT-based code  
-   └── song_encoder.py      # MLP-based code  
-   
-
+│   │   ├── query_encoder_finetuned.pth
+│   │   └── song_encoder.pth
+│   └── v1/
+│       ├── query_encoder_finetuned.pth
+│       └── song_encoder.pth
+└── modules/
+    ├── query_encoder.py     # DistilBERT-based code
+    └── song_encoder.py      # MLP-based code
+```
 ---
 
 ## 6. Installation
@@ -120,14 +124,7 @@ SonicSynapse/
 
 ### 7.1 Full Workflow Demo
 
-python scripts/workflow_ui.py
-
-### 7.2 Individual Components
-
-- Record Audio: python scripts/record_audio.py  
-- Transcribe Audio: python scripts/voice_to_text.py  
-- Generate Recommendations: python scripts/step4_inference.py  
-- Play Songs: python scripts/play_songs.py  
+python scripts/workflow_ui.py 
 
 ---
 
