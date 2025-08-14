@@ -1,6 +1,3 @@
-# Deep Learning (CSL4020)  
-## Course Project
-
 # SonicSynapse: Voice-Controlled Music Recommendation
 
 ---
